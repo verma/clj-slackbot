@@ -1,0 +1,1 @@
+web: java $JVM_OPTS -jar target/clj-slackbot-0.1.0-SNAPSHOT-standalone.jar
