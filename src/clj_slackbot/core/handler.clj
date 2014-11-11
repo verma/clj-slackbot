@@ -89,5 +89,6 @@
                         api-defaults))
 
 (defn -main [& args]
-  (run-jetty app {:port (or (:port env)
-                            3000)}))
+  (run-jetty app {:port (if-let [p (:port env)]
+                          (Integer/parseInt p)
+                          3000)}))
