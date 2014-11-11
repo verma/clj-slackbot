@@ -5,9 +5,11 @@
             [clojail.testers :refer [secure-tester-without-def blanket]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [environ.core :refer [env]]
+            [ring.adapter.jetty :refer [run-jetty]]
             [clj-http.client :as client])
   (:import java.io.StringWriter
-           java.util.concurrent.TimeoutException))
+           java.util.concurrent.TimeoutException)
+  (:gen-class))
 
 (def clj-slackbot-tester
   (conj secure-tester-without-def (blanket "clj-slackbot")))
@@ -85,3 +87,7 @@
 
 (def app (wrap-defaults approutes
                         api-defaults))
+
+(defn -main [& args]
+  (run-jetty app {:port (or (:port env)
+                            3000)}))
