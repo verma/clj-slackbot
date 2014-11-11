@@ -11,6 +11,7 @@
                  [ring/ring-defaults "0.1.2"]]
   :plugins [[lein-ring "0.8.13"]]
   :ring {:handler clj-slackbot.core.handler/app}
+  :uberjar-name "clj-slackbot.jar"
   :profiles
   {:dev {:repl-options {:init-ns clj-slackbot.core.handler}
          :dependencies [[javax.servlet/servlet-api "2.5"]
