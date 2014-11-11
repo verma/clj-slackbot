@@ -75,7 +75,7 @@
     (let [channel (condp = (:channel_name params)
                     "directmessage" (str "@" (:user_name params))
                     "privategroup" (:channel_id params)
-                    :else (str "#" (:channel_name params)))]
+                    (str "#" (:channel_name params)))]
       (eval-and-post (:text params) channel)
       {:status 200
        :body ""
@@ -89,6 +89,5 @@
                         api-defaults))
 
 (defn -main [& args]
-  (run-jetty app {:port (if-let [p (:port env)]
-                          (Integer/parseInt p)
-                          3000)}))
+  (run-jetty app {:port (Integer/parseInt (or (:port env)
+                                              "3000"))}))
