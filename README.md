@@ -1,3 +1,5 @@
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
 # clj-slackbot
 
 A clojure project to run a eval bot which can be easily hooked up in Slack.
