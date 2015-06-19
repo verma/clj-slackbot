@@ -27,7 +27,8 @@
      (let [p (if channel {:channel channel} {})]
        (client/post post-url
                    {:content-type :json
-                    :form-params (assoc p :text s)})))
+                    :form-params (assoc p :text s)
+                    :query-params {"parse" "none"}})))
   ([s]
      (post-to-slack s nil)))
 
