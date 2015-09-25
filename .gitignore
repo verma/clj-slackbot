@@ -1,3 +1,5 @@
+/.idea
+/clj_slackbot.iml
 /target
 /lib
 /classes
