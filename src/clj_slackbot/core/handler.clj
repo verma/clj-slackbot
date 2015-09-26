@@ -3,36 +3,34 @@
             [compojure.route :as route]
             [clojail.core :refer [sandbox]]
             [clojail.testers :refer [secure-tester-without-def blanket]]
-            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
+            [ring.middleware.json :refer [wrap-json-params]]
             [environ.core :refer [env]]
             [ring.adapter.jetty :refer [run-jetty]]
             [clj-http.client :as client])
-  (:import java.io.StringWriter
-           java.util.concurrent.TimeoutException)
+  (:import java.io.StringWriter)
   (:gen-class))
 
-(def clj-slackbot-tester
+(def ^:private clj-slackbot-tester
   (conj secure-tester-without-def (blanket "clj-slackbot")))
 
-(def sb (sandbox clj-slackbot-tester))
+(defonce ^:private sb (sandbox clj-slackbot-tester))
 
-(def post-url
-  (:post-url env))
+(def ^:private post-url (:post-url env))
 
-(def command-token
-  (:command-token env))
+(def ^:private command-token (:command-token env))
 
-(defn post-to-slack
-  ([s channel]
-     (let [p (if channel {:channel channel} {})]
-       (client/post post-url
-                   {:content-type :json
-                    :form-params (assoc p :text s)
-                    :query-params {"parse" "none"}})))
+(defn- post-to-slack
   ([s]
-     (post-to-slack s nil)))
+   (post-to-slack s nil))
+  ([s channel]
+   (let [p (if channel {:channel channel} {})]
+     (client/post post-url
+                  {:content-type :json
+                   :form-params (assoc p :text s)
+                   :query-params {"parse" "none"}}))))
 
-(defn eval-expr
+(defn- eval-expr
   "Evaluate the given string"
   [s]
   (try
@@ -49,28 +47,26 @@
        :input s
        :result (.getMessage e)})))
 
-(defn format-result [r]
+(defn- format-result
+  [r]
   (if (:status r)
-    (str "```"
-         "=> " (:form r) "\n"
-         (when-let [o (:output r)]
-           o)
-         (if (nil? (:result r))
-           "nil"
-           (:result r))
-         "```")
-    (str "```"
-         "==> " (or (:form r) (:input r)) "\n"
-         (or (:result r) "Unknown Error")
-         "```")))
+    (format "```=> %s\n%s%s```"
+            (:form r)
+            (:output r)
+            (or (:result r) nil))
+    (format "```==> %s\n%s```"
+            (or (:form r) (:input r))
+            (or (:result r) "Unknown Error"))))
 
-(defn eval-and-post [s channel]
+(defn- eval-and-post
+  [s channel]
   (-> s
       eval-expr
       format-result
       (post-to-slack channel)))
 
-(defn handle-clj [params]
+(defn handle-clj
+  [params]
   (if-not (= (:token params) command-token)
     {:status 403 :body "Unauthorized"}
     (let [channel (condp = (:channel_name params)
@@ -84,11 +80,14 @@
 
 (defroutes approutes
   (POST "/clj" req (handle-clj (:params req)))
+  (GET "/status" _ {:status 200
+                    :body "OK"
+                    :headers {"Content-Type" "text/plain"}})
   (route/not-found "Not Found"))
 
-(def app (wrap-defaults approutes
-                        api-defaults))
+(def app (wrap-json-params (wrap-keyword-params approutes)))
 
 (defn -main [& args]
-  (run-jetty app {:port (Integer/parseInt (or (:port env)
-                                              "3000"))}))
+  (run-jetty (var app)
+             {:port (Integer/parseInt (or (:port env) "3000"))
+              :join? false}))
