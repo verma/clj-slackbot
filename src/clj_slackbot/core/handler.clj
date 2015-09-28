@@ -79,7 +79,9 @@
        :headers {"Content-Type" "text/plain"}})))
 
 (defroutes approutes
-  (POST "/clj" req (handle-clj (:params req)))
+  (POST "/clj" req
+    (do (println req)
+        (handle-clj (:params req))))
   (GET "/status" _ {:status 200
                     :body "OK"
                     :headers {"Content-Type" "text/plain"}})
@@ -91,3 +93,5 @@
   (run-jetty (var app)
              {:port (Integer/parseInt (or (:port env) "3000"))
               :join? false}))
+
+(defn greet [^Integer s] s)
