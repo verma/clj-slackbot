@@ -20,16 +20,17 @@
 
 (def ^:private command-token (:command-token env))
 
-
-
 (defn- post-to-slack
   [s channel]
+  (println "Posting to slack" s)
+  (println "channel" channel)
   (client/post post-url {:content-type :json
                          :body         (format "{\"channel\":\"%s\",\"text\":\"%s\"}" channel s)}))
 
 (defn- eval-expr
   "Evaluate the given string"
   [s]
+  (println "Attempting evaluation" s)
   (try
     (with-open [out (StringWriter.)]
       (let [form (binding [*read-eval* false] (read-string s))
@@ -46,6 +47,7 @@
 
 (defn- format-result
   [r]
+  (println "Formatting result" r)
   (if (:status r)
     (format "```=> %s\n%s%s```"
             (:form r)
@@ -62,6 +64,7 @@
 
 (defn handle-clj
   [params]
+  (println "Handling request" params)
   (if-not (= (:token params) command-token)
     {:status 403 :body "Unauthorized"}
     (let [channel (condp = (:channel_name params)
