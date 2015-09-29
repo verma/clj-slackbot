@@ -20,16 +20,12 @@
 
 (def ^:private command-token (:command-token env))
 
+
+
 (defn- post-to-slack
-  ([s]
-   (post-to-slack s nil))
-  ([s channel]
-   (let [p (if channel {:channel channel} {})
-         params {:content-type :json
-                 :form-params (assoc p :text s)
-                 :query-params {"parse" "none"}}]
-     (println params)
-     (client/post post-url params))))
+  [s channel]
+  (client/post post-url {:content-type :json
+                         :body         (format "{\"channel\":\"%s\",\"text\":\"%s\"}" channel s)}))
 
 (defn- eval-expr
   "Evaluate the given string"
@@ -62,7 +58,6 @@
 (defn- eval-and-post
   [s channel]
   (let [result (-> s eval-expr format-result)]
-    (println result channel)
     (post-to-slack result channel)))
 
 (defn handle-clj
@@ -75,13 +70,11 @@
                     (str "#" (:channel_name params)))]
       (eval-and-post (:text params) channel)
       {:status 200
-       :body ""
+       :body "..."
        :headers {"Content-Type" "text/plain"}})))
 
 (defroutes approutes
-  (POST "/clj" req
-    (do (println req)
-        (handle-clj (:params req))))
+  (POST "/clj" req (handle-clj (:params req)))
   (GET "/status" _ {:status 200
                     :body "OK"
                     :headers {"Content-Type" "text/plain"}})
