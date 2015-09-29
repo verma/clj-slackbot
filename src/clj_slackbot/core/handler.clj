@@ -4,7 +4,7 @@
             [clojail.core :refer [sandbox]]
             [clojail.testers :refer [secure-tester-without-def blanket]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-            [ring.middleware.json :refer [wrap-json-params]]
+            [ring.middleware.params :refer [wrap-params]]
             [environ.core :refer [env]]
             [ring.adapter.jetty :refer [run-jetty]]
             [clj-http.client :as client])
@@ -87,11 +87,9 @@
                     :headers {"Content-Type" "text/plain"}})
   (route/not-found "Not Found"))
 
-(def app (wrap-json-params (wrap-keyword-params approutes)))
+(def app (wrap-params (wrap-keyword-params approutes)))
 
 (defn -main [& args]
   (run-jetty (var app)
              {:port (Integer/parseInt (or (:port env) "3000"))
               :join? false}))
-
-(defn greet [^Integer s] s)

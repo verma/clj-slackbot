@@ -9,8 +9,7 @@
                  [cheshire "5.5.0"]
                  [environ "1.0.1"]
                  [ring/ring-jetty-adapter "1.4.0"]
-                 [ring/ring-defaults "0.1.5"]
-                 [ring/ring-json "0.4.0"]]
+                 [ring/ring-defaults "0.1.5"]]
   :plugins [[lein-ring "0.9.6"]]
   :ring {:handler clj-slackbot.core.handler/app}
   :uberjar-name "clj-slackbot.jar"
