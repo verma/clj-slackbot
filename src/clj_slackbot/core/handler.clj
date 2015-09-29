@@ -24,11 +24,12 @@
   ([s]
    (post-to-slack s nil))
   ([s channel]
-   (let [p (if channel {:channel channel} {})]
-     (client/post post-url
-                  {:content-type :json
-                   :form-params (assoc p :text s)
-                   :query-params {"parse" "none"}}))))
+   (let [p (if channel {:channel channel} {})
+         params {:content-type :json
+                 :form-params (assoc p :text s)
+                 :query-params {"parse" "none"}}]
+     (println params)
+     (client/post post-url params))))
 
 (defn- eval-expr
   "Evaluate the given string"
@@ -60,10 +61,9 @@
 
 (defn- eval-and-post
   [s channel]
-  (-> s
-      eval-expr
-      format-result
-      (post-to-slack channel)))
+  (let [result (-> s eval-expr format-result)]
+    (println result channel)
+    (post-to-slack result channel)))
 
 (defn handle-clj
   [params]
@@ -91,5 +91,4 @@
 
 (defn -main [& args]
   (run-jetty (var app)
-             {:port (Integer/parseInt (or (:port env) "3000"))
-              :join? false}))
+             {:port (Integer/parseInt (or (:port env) "3000"))}))
