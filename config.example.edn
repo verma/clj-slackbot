@@ -1,0 +1,6 @@
+{:comm :clj-slackbot.comms.slack-rtm/start
+ :api-token "XXX"
+ :prefix ","
+ :port 3000
+ :command-token "XXX"
+ :post-url "XXX"}
