@@ -8,3 +8,8 @@ pom.xml.asc
 *.class
 /.lein-*
 /.nrepl-port
+.DS_Store
+Thumbs.db
+config.edn
+*.iml
+/.idea
