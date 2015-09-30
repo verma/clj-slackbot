@@ -23,9 +23,10 @@
 (defn- post-to-slack
   [s channel]
   (println "Posting to slack" s)
-  (println "channel" channel)
+  (println "channel" channel ", url" post-url)
   (client/post post-url {:content-type :json
-                         :body         (format "{\"channel\":\"%s\",\"text\":\"%s\"}" channel s)}))
+                         :body         (format "{\"channel\":\"%s\",\"text\":\"%s\"}" channel s)})
+  (println "posted"))
 
 (defn- eval-expr
   "Evaluate the given string"
