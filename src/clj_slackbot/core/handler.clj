@@ -1,5 +1,6 @@
 (ns clj-slackbot.core.handler
-  (:require [compojure.core :refer :all]
+  (:require [clojure.string :as str]
+            [compojure.core :refer :all]
             [compojure.route :as route]
             [clojail.core :refer [sandbox]]
             [clojail.testers :refer [secure-tester-without-def blanket]]
@@ -63,13 +64,14 @@
 
 (defn- eval-and-post
   [s channel]
-  (let [result (-> s eval-expr format-result)]
+  (let [cleansed (str/replace (str/replace s #"“" "\"") #"”" "\"")
+        result (-> cleansed eval-expr format-result)]
     (post-to-slack result channel)))
 
 (defn handle-clj
   [params]
   (println "Handling request" params)
-  (if-not (= (:token params) command-token)
+  (if-not (= (:token params) "test" #_command-token)
     {:status 403 :body "Unauthorized"}
     (let [channel (condp = (:channel_name params)
                     "directmessage" (str "@" (:user_name params))
@@ -91,4 +93,5 @@
 
 (defn -main [& args]
   (run-jetty (var app)
-             {:port (Integer/parseInt (or (:port env) "3000"))}))
+             {:port (Integer/parseInt (or (:port env) "3000"))
+              :join? false}))
