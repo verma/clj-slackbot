@@ -71,7 +71,7 @@
 (defn handle-clj
   [params]
   (println "Handling request" params)
-  (if-not (= (:token params) "test" #_command-token)
+  (if-not (= (:token params) command-token)
     {:status 403 :body "Unauthorized"}
     (let [channel (condp = (:channel_name params)
                     "directmessage" (str "@" (:user_name params))
