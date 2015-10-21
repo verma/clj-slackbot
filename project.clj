@@ -4,7 +4,7 @@
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [compojure "1.2.0"]
+                 [compojure "1.4.0"]
                  [clojail "1.0.6"]
                  [clj-http "1.0.1"]
                  [cheshire "5.3.1"]
