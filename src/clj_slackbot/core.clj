@@ -1,9 +1,8 @@
  (ns clj-slackbot.core
    (:require [clj-slackbot.config :as config]
+             [clj-slackbot.util :as util]
              [clj-slackbot.evaluator :as evaluator]
-             [clj-slackbot.comms.slack-rtm]
-             [clojure.core.async :as async :refer [>! <! go go-loop]]
-             [clj-slackbot.util :as util])
+             [clojure.core.async :as async :refer [>! <! go go-loop]])
    (:import java.lang.Thread)
   (:gen-class))
 

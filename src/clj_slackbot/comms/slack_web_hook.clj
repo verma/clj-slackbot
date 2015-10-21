@@ -2,13 +2,10 @@
   (:require [clj-slackbot.util :as util]
             [compojure.core :refer :all]
             [compojure.route :as route]
-            [clojail.core :refer [sandbox]]
-            [clojail.testers :refer [secure-tester-without-def blanket]]
-            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
-            [environ.core :refer [env]]
-            [ring.adapter.jetty :refer [run-jetty]]
             [clj-http.client :as client]
-            [clojure.core.async :as async :refer [>!! <!! go-loop]])
+            [clojure.core.async :as async :refer [>!! <!! go-loop]]
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [org.httpkit.server :refer [run-server]])
   (:gen-class))
 
 (defn post-to-slack
@@ -62,11 +59,10 @@
           (recur (<!! cout)))))
 
     ;; start web listener
-    (let [server (run-jetty app {:port port
-                               :join? false})]
+    (let [server (run-server app {:port port})]
       [cin cout (fn []
                   (async/close! cin)
                   (async/close! cout)
-                  (.stop server))])))
+                  (server))])))
 
 

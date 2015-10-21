@@ -16,11 +16,18 @@
          "```")))
 
 
+(defn safe-resolve [kw]
+  (let [user-ns (symbol (namespace kw))
+        user-fn (symbol (name kw))]
+      (try
+        (ns-resolve user-ns user-fn)
+        (catch Exception e
+          (require user-ns)
+          (ns-resolve user-ns user-fn)))))
+
+
 (defn kw->fn [kw]
   (try
-    (let [user-ns (symbol (namespace kw))
-          user-fn (symbol (name kw))]
-      (or (ns-resolve user-ns user-fn)
-          (throw (Exception.))))
+    (safe-resolve kw)
     (catch Throwable e
       (throw (ex-info "Could not resolve symbol on classpath" {:kw kw})))))
