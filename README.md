@@ -38,6 +38,8 @@ You can create a bot in slack which should give you an `api-token`.  Please see 
 Please see the section on [Bot Users](https://api.slack.com/bot-users).
 
 ### Running the bot
+Copy the `.java.policy` file to your home directory.
+
 If you have the jar file, just do:
 
     java -jar clj-slackbot.jar
