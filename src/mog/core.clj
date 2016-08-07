@@ -1,7 +1,7 @@
- (ns clj-slackbot.core
-   (:require [clj-slackbot.config :as config]
-             [clj-slackbot.util :as util]
-             [clj-slackbot.evaluator :as evaluator]
+ (ns mog.core
+   (:require [mog.config :as config]
+             [mog.util :as util]
+             [mog.evaluator :as evaluator]
              [clojure.core.async :as async :refer [>! <! go go-loop]])
    (:import java.lang.Thread)
   (:gen-class))
@@ -35,4 +35,3 @@
           (inst-comm))))
 
     (.join (Thread/currentThread))))
-

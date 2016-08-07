@@ -1,4 +1,4 @@
-(ns clj-slackbot.util)
+(ns mog.util)
 
 (defn format-result-for-slack [r]
   (if (:status r)

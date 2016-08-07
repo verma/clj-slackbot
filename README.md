@@ -1,6 +1,8 @@
+[![CircleCI](https://circleci.com/gh/kliph/mog-clj-slackbot.svg?style=svg)](https://circleci.com/gh/kliph/mog-clj-slackbot)
+
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-# clj-slackbot
+# Mog: a clj-slackbot fork
 
 A clojure project to run a eval bot which can be easily hooked up in Slack.
 
@@ -15,7 +17,7 @@ This bot now supports different kinds of comm-links (communication channels to t
 ### Using the Webhook configuration
 Webhook configuration needs four things defined in `config.edn`:
 
-- `:comm :clj-slackbot.comms.slack-web-hook/start`
+- `:comm :mog.comms.slack-web-hook/start`
 - `:post-url` - The post URL to post responses to a channel.
 - `:command-token` - The token you get when you create a slash command in slack. Usually something like `/clj`.
 - `:port` - The port to run the web-server on.
@@ -31,7 +33,7 @@ __WARNING: New Stuff__
 
 You can create a bot in slack which should give you an `api-token`.  Please see [this](https://api.slack.com/rtm) for more details. You need the following configuration to setup an RTM API:
 
-- `:comm :clj-slackbot.comms.slack-rtm/start`
+- `:comm :mog.comms.slack-rtm/start`
 - `:api-token` - The bot token you'll get once you create a slack bot.
 - `:prefix` - The prefix which triggers eval. E.g. you could set it to a `,` and then messages to the channel like `,(+ 1 1)` will be evaluated by the bot.
 
@@ -42,7 +44,7 @@ Copy the `.java.policy` file to your home directory.
 
 If you have the jar file, just do:
 
-    java -jar clj-slackbot.jar
+    java -jar mog.jar
 
 Or can checkout the source and run:
 
@@ -50,8 +52,10 @@ Or can checkout the source and run:
 
 If your configuration file is not in the current directory of the program, you can specify a `CONFIG_FILE` environment variable pointing to the location of the configuration file.
 
-    CONFIG_FILE=/path/to/config.edn java -jar clj-slackbot.jar
-    
+    CONFIG_FILE=/path/to/config.edn java -jar mog.jar
+
 ## License
 
 Copyright © 2014 Uday Verma.  Licensed under the same terms as Clojure (EPL).
+
+Mog Copyright © 2016 Cliff Rodgers.  Licensed under Eclipse Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php).

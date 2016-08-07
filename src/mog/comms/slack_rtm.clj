@@ -1,9 +1,9 @@
-(ns clj-slackbot.comms.slack-rtm
+(ns mog.comms.slack-rtm
   (:require [clojure.core.async :as async :refer [go go-loop]]
             [clj-http.client :as http]
             [gniazdo.core :as ws]
             [cheshire.core :refer [parse-string generate-string]]
-            [clj-slackbot.util :as util]))
+            [mog.util :as util]))
 
 (def ^:private rtm-socket-url
   "https://slack.com/api/rtm.start")

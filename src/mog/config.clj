@@ -1,4 +1,4 @@
- (ns clj-slackbot.config
+ (ns mog.config
    (:require [clojure.edn :as edn]
              [environ.core :refer [env]]))
 

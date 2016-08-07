@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -jar target/clj-slackbot.jar
+web: java $JVM_OPTS -jar target/mog.jar

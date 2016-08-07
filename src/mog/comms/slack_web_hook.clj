@@ -1,5 +1,5 @@
-(ns clj-slackbot.comms.slack-web-hook
-  (:require [clj-slackbot.util :as util]
+(ns mog.comms.slack-web-hook
+  (:require [mog.util :as util]
             [compojure.core :refer :all]
             [compojure.route :as route]
             [clj-http.client :as client]
@@ -64,5 +64,3 @@
                   (async/close! cin)
                   (async/close! cout)
                   (server))])))
-
-

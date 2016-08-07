@@ -1,12 +1,12 @@
-(ns clj-slackbot.evaluator
+(ns mog.evaluator
   (:require [clojail.core :refer [sandbox]]
             [clojail.testers :refer [secure-tester-without-def blanket]])
   (:import java.io.StringWriter))
 
-(def clj-slackbot-tester
-  (conj secure-tester-without-def (blanket "clj-slackbot")))
+(def mog-tester
+  (conj secure-tester-without-def (blanket "mog")))
 
-(def sb (sandbox clj-slackbot-tester))
+(def sb (sandbox mog-tester))
 
 (defn eval-expr
   "Evaluate the given string"
