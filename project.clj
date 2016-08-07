@@ -16,5 +16,5 @@
   :uberjar-name "mog.jar"
   :main mog.core
   :profiles
-  {:dev {:repl-options {:init-ns mog.core.handler}}
+  {:dev {:repl-options {:init-ns mog.core}}
    :uberjar {:aot :all}})
