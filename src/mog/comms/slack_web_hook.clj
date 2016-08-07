@@ -25,7 +25,7 @@
                     "directmessage" (str "@" (:user_name params))
                     "privategroup" (:channel_id params)
                     (str "#" (:channel_name params)))]
-      ;; send the form to our evaluator and get out of here
+      ;; send the form to our brain and get out of here
       (>!! cin {:input (:text params)
                 :meta {:channel channel}})
 
@@ -50,7 +50,7 @@
     (go-loop [res (<!! cout)]
       (if-not res
         (println "The form output channel has been closed. Leaving listen loop.")
-        (let [result (:evaluator/result res)
+        (let [result (:mog/result res)
               channel (get-in res [:meta :channel])]
           (post-to-slack
             post-url

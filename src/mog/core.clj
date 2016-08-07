@@ -1,7 +1,6 @@
  (ns mog.core
    (:require [mog.config :as config]
              [mog.util :as util]
-             [mog.evaluator :as evaluator]
              [clojure.core.async :as async :refer [>! <! go go-loop]])
    (:import java.lang.Thread)
   (:gen-class))
@@ -19,12 +18,12 @@
 
     (go-loop [[in out stop] (inst-comm)]
       (println ":: waiting for input")
-      (if-let [form (<! in)]
-        (let [input (:input form)
-              res (evaluator/eval-expr input)]
-          (println ":: form >> " input)
+      (if-let [event (<! in)]
+        (let [input (:input event)
+              res input]
+          (println ":: event >> " input)
           (println ":: => " res)
-          (>! out (assoc form :evaluator/result res))
+          (>! out (assoc event :mog/response res))
           (recur [in out stop]))
 
         ;; something wrong happened, re init

@@ -1,19 +1,7 @@
 (ns mog.util)
 
 (defn format-result-for-slack [r]
-  (if (:status r)
-    (str "```"
-         "=> " (:form r) "\n"
-         (when-let [o (:output r)]
-           o)
-         (if (nil? (:result r))
-           "nil"
-           (:result r))
-         "```")
-    (str "```"
-         "==> " (or (:form r) (:input r)) "\n"
-         (or (:result r) "Unknown Error")
-         "```")))
+  (str r))
 
 
 (defn safe-resolve [kw]

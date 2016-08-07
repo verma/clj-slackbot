@@ -71,13 +71,14 @@
               (async/>! out {:id      (next-id) :type "message"
                              :channel (get-in v [:meta :channel])
                              :text    (-> v
-                                          :evaluator/result
                                           util/format-result-for-slack)})
 
               ;; the websocket has sent us something, figure out if its of interest
-              ;; to us, and if it is, send it to the evaluator
+              ;; to us, and if it is, send it to the bot's brain
               (do
                 (println ":: incoming:" v)
+                ;; When the input has the prefix, process it as a
+                ;; command.
                 (when (can-handle? v prefix)
                   (async/>! cin {:input (subs (:text v) 1)
                                  :meta  v}))))
