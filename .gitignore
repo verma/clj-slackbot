@@ -13,3 +13,7 @@ Thumbs.db
 config.edn
 *.iml
 /.idea
+
+*~*
+*#*
+/.projectile

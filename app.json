@@ -1,13 +1,13 @@
 {
-    "name": "clj-slackbot",
-    "description": "A clojure chat bot that is easy to integrate with slack.",
-    "keywords": ["clojure", "slack", "chat", "bot"],
-    "env": {
-        "COMMAND_TOKEN": {
-            "description": "The token for your slash command hook."
-        }, 
-        "POST_URL": {
-            "description": "The URL to post stuff to slack (an incoming web-hook)."
-        }
+  "name": "mog",
+  "description": "A slackbot for managing our grocery list",
+  "keywords": ["clojure", "slack", "chat", "bot"],
+  "env": {
+    "COMMAND_TOKEN": {
+      "description": "The token for your slash command hook."
+    },
+    "POST_URL": {
+      "description": "The URL to post stuff to slack (an incoming web-hook)."
     }
+  }
 }

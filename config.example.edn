@@ -1,4 +1,4 @@
-{:comm :clj-slackbot.comms.slack-rtm/start
+{:comm :mog.comms.slack-rtm/start
  :api-token "XXX"
  :prefix ","
  :port 3000
