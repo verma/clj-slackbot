@@ -33,7 +33,7 @@ __WARNING: New Stuff__
 
 You can create a bot in slack which should give you an `api-token`.  Please see [this](https://api.slack.com/rtm) for more details. You need the following configuration to setup an RTM API:
 
-- `:comm :mog.comms.slack-rtm/start`
+- `:comm :mog.comms.slack-rtm/start-event-loop`
 - `:api-token` - The bot token you'll get once you create a slack bot.
 - `:prefix` - The prefix which triggers eval. E.g. you could set it to a `,` and then messages to the channel like `,(+ 1 1)` will be evaluated by the bot.
 
