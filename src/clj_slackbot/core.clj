@@ -32,7 +32,7 @@
           (println ":: WARNING! The comms went down, going to restart.")
           (stop)
           (<! (async/timeout 3000))
-          (inst-comm))))
+          (recur (inst-comm)))))
 
     (.join (Thread/currentThread))))
 
