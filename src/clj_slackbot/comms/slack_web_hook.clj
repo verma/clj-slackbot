@@ -34,10 +34,10 @@
       {:status 200 :body "..." :headers {"Content-Type" "text/plain"}})))
 
 
-(defn start [{:keys [port post-url command-token] :as config}]
+(defn start [{:keys [port command-token]}]
   ;; check we have everything
-  (when (some nil? [port post-url command-token])
-    (throw (Exception. "Cannot initialize. Missing port, post-url or command-token")))
+  (when (some nil? [port command-token])
+    (throw (Exception. "Cannot initialize. Missing port or command-token")))
 
   (println ":: starting http server on port:" port)
   (let [cin (async/chan 10)
@@ -53,7 +53,8 @@
       (if-not res
         (println "The form output channel has been closed. Leaving listen loop.")
         (let [result (:evaluator/result res)
-              channel (get-in res [:meta :channel])]
+              channel (get-in res [:meta :channel])
+              post-url (get-in res [:meta :response-url])]
           (post-to-slack
             post-url
             (util/format-result-for-slack result)
