@@ -16,7 +16,6 @@ This bot now supports different kinds of comm-links (communication channels to t
 Webhook configuration needs four things defined in `config.edn`:
 
 - `:comm :clj-slackbot.comms.slack-web-hook/start`
-- `:post-url` - The post URL to post responses to a channel.
 - `:command-token` - The token you get when you create a slash command in slack. Usually something like `/clj`.
 - `:port` - The port to run the web-server on.
 
