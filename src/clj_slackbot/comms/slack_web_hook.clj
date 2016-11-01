@@ -10,13 +10,13 @@
 
 (defn post-to-slack
   ([post-url s channel]
-     (let [p (if channel {:channel channel} {})]
-       (client/post post-url
-                   {:content-type :json
-                    :form-params (assoc p :text s)
-                    :query-params {"parse" "none"}})))
+   (let [p (if channel {:channel channel} {})]
+     (client/post post-url
+                  {:content-type :json
+                   :form-params  (assoc p :text s)
+                   :query-params {"parse" "none"}})))
   ([post-url s]
-     (post-to-slack post-url s nil)))
+   (post-to-slack post-url s nil)))
 
 (defn handle-clj [params command-token cin]
   (if-not (= (:token params) command-token)
@@ -27,7 +27,9 @@
                     (str "#" (:channel_name params)))]
       ;; send the form to our evaluator and get out of here
       (>!! cin {:input (:text params)
-                :meta {:channel channel}})
+                :meta  {:channel      channel
+                        :response-url (:response_url params)
+                        :user (:user_name params)}})
 
       {:status 200 :body "..." :headers {"Content-Type" "text/plain"}})))
 
