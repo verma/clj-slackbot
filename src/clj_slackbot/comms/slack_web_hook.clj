@@ -52,12 +52,11 @@
     (go-loop [res (<!! cout)]
       (if-not res
         (println "The form output channel has been closed. Leaving listen loop.")
-        (let [result (:evaluator/result res)
-              channel (get-in res [:meta :channel])
+        (let [channel (get-in res [:meta :channel])
               post-url (get-in res [:meta :response-url])]
           (post-to-slack
             post-url
-            (util/format-result-for-slack result)
+            (util/format-result-for-slack res)
             channel)
           (recur (<!! cout)))))
 
