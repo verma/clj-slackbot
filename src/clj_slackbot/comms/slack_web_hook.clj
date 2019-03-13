@@ -10,11 +10,11 @@
 
 (defn post-to-slack
   ([post-url s channel]
-   (let [p (if channel {:channel channel} {})]
-     (client/post post-url
-                  {:content-type :json
-                   :form-params  (assoc p :text s)
-                   :query-params {"parse" "none"}})))
+   (client/post post-url
+     {:content-type :json
+      :form-params  (cond-> {:text s}
+                      channel (assoc :channel channel))
+      :query-params {"parse" "none"}}))
   ([post-url s]
    (post-to-slack post-url s nil)))
 
