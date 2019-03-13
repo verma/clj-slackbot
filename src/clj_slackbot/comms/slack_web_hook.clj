@@ -21,7 +21,7 @@
 (defn handle-clj [params command-token cin]
   (if-not (= (:token params) command-token)
     {:status 403 :body "Unauthorized"}
-    (let [channel (condp = (:channel_name params)
+    (let [channel (case (:channel_name params)
                     "directmessage" (str "@" (:user_name params))
                     "privategroup" (:channel_id params)
                     (str "#" (:channel_name params)))]
