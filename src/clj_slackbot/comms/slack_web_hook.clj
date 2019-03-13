@@ -18,23 +18,25 @@
   ([post-url s]
    (post-to-slack post-url s nil)))
 
-(defn handle-clj [params command-token cin]
-  (if-not (= (:token params) command-token)
+(defn handle-clj
+  [{:keys [token channel_id channel_name response_url text user_name]} command-token cin]
+  (if-not (= token command-token)
     {:status 403 :body "Unauthorized"}
-    (let [channel (case (:channel_name params)
-                    "directmessage" (str "@" (:user_name params))
-                    "privategroup" (:channel_id params)
-                    (str "#" (:channel_name params)))]
+    (let [channel (case channel_name
+                    "directmessage" (str "@" user_name)
+                    "privategroup" channel_id
+                    (str "#" channel_name))]
       ;; send the form to our evaluator and get out of here
-      (>!! cin {:input (:text params)
+      (>!! cin {:input text
                 :meta  {:channel      channel
-                        :response-url (:response_url params)
-                        :user (:user_name params)}})
+                        :response-url response_url
+                        :user user_name}})
 
       {:status 200 :body "..." :headers {"Content-Type" "text/plain"}})))
 
 
-(defn start [{:keys [port command-token]}]
+(defn start
+  [{:keys [port command-token]}]
   ;; check we have everything
   (when (some nil? [port command-token])
     (throw (Exception. "Cannot initialize. Missing port or command-token")))
