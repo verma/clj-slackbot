@@ -49,11 +49,10 @@
                   (route/not-found "Not Found"))
                 (wrap-defaults api-defaults))]
     ;; start the loops we need to read back eval responses
-    (go-loop [res (<!! cout)]
+    (go-loop [{{post-url :response-url channel :channel} :meta :as res} (<!! cout)]
       (if-not res
         (println "The form output channel has been closed. Leaving listen loop.")
-        (let [channel (get-in res [:meta :channel])
-              post-url (get-in res [:meta :response-url])]
+        (do
           (post-to-slack
             post-url
             (util/format-result-for-slack res)
