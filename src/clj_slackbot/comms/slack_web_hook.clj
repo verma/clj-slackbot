@@ -10,32 +10,36 @@
 
 (defn post-to-slack
   ([post-url s channel]
-     (let [p (if channel {:channel channel} {})]
-       (client/post post-url
-                   {:content-type :json
-                    :form-params (assoc p :text s)
-                    :query-params {"parse" "none"}})))
+   (client/post post-url
+     {:content-type :json
+      :form-params  (cond-> {:text s}
+                      channel (assoc :channel channel))
+      :query-params {"parse" "none"}}))
   ([post-url s]
-     (post-to-slack post-url s nil)))
+   (post-to-slack post-url s nil)))
 
-(defn handle-clj [params command-token cin]
-  (if-not (= (:token params) command-token)
+(defn handle-clj
+  [{:keys [token channel_id channel_name response_url text user_name]} command-token cin]
+  (if-not (= token command-token)
     {:status 403 :body "Unauthorized"}
-    (let [channel (condp = (:channel_name params)
-                    "directmessage" (str "@" (:user_name params))
-                    "privategroup" (:channel_id params)
-                    (str "#" (:channel_name params)))]
+    (let [channel (case channel_name
+                    "directmessage" (str "@" user_name)
+                    "privategroup" channel_id
+                    (str "#" channel_name))]
       ;; send the form to our evaluator and get out of here
-      (>!! cin {:input (:text params)
-                :meta {:channel channel}})
+      (>!! cin {:input text
+                :meta  {:channel      channel
+                        :response-url response_url
+                        :user user_name}})
 
       {:status 200 :body "..." :headers {"Content-Type" "text/plain"}})))
 
 
-(defn start [{:keys [port post-url command-token] :as config}]
+(defn start
+  [{:keys [port command-token]}]
   ;; check we have everything
-  (when (some nil? [port post-url command-token])
-    (throw (Exception. "Cannot initialize. Missing port, post-url or command-token")))
+  (when (some nil? [port command-token])
+    (throw (Exception. "Cannot initialize. Missing port or command-token")))
 
   (println ":: starting http server on port:" port)
   (let [cin (async/chan 10)
@@ -47,14 +51,13 @@
                   (route/not-found "Not Found"))
                 (wrap-defaults api-defaults))]
     ;; start the loops we need to read back eval responses
-    (go-loop [res (<!! cout)]
+    (go-loop [{{post-url :response-url channel :channel} :meta :as res} (<!! cout)]
       (if-not res
         (println "The form output channel has been closed. Leaving listen loop.")
-        (let [result (:evaluator/result res)
-              channel (get-in res [:meta :channel])]
+        (do
           (post-to-slack
             post-url
-            (util/format-result-for-slack result)
+            (util/format-result-for-slack res)
             channel)
           (recur (<!! cout)))))
 
